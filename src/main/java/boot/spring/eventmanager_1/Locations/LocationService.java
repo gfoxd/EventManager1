@@ -1,5 +1,6 @@
 package boot.spring.eventmanager_1.Locations;
 
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,15 @@ public class LocationService {
                 .toList();
 
         return locations;
+    }
+
+    public Location createLocation(Location location) {
+
+        LocationEntity locationEntity = locationRepository
+                .save(locationConverter.toEntity(location));
+
+        return locationConverter
+                .fromEntityToDomain(locationEntity);
     }
 
 }

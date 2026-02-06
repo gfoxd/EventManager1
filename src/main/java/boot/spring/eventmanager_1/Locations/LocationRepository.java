@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
+
+
 }
