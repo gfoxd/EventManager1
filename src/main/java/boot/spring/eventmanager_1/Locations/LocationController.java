@@ -68,31 +68,35 @@ public class LocationController {
     }
 
     @GetMapping("/{locationId}")
-    public ResponseEntity getLocationById(
+    public ResponseEntity<LocationDto> getLocationById(
             @PathVariable ("locationId")  Long id
     ){
         log.info("LocationController request getLocationById");
 
-        LocationDto location = locationConverter
+        LocationDto locationDto = locationConverter
                 .toDto(locationService
                         .getLocationById(id));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(location);
+                .body(locationDto);
 
     }
 
     @PutMapping("/{locationId}")
-    public LocationDto updateLocation(
+    public ResponseEntity updateLocation(
             @PathVariable ("locationId") Long id,
             @Valid @RequestBody LocationDto locationDto
     ){
         log.info("LocationController request updateLocation");
 
-        return locationConverter.toDto(
+        locationDto = locationConverter.toDto(
                 locationService.updateLocation(
                         id, locationConverter.toDomain(locationDto)));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(locationDto);
     }
 
 }

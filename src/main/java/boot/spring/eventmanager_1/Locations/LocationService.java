@@ -19,6 +19,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
+    @Transactional
     public List<Location> getAllLocations() {
         var locations = locationRepository
                 .findAll()
@@ -29,6 +30,7 @@ public class LocationService {
         return locations;
     }
 
+    @Transactional
     public Location createLocation(Location location) {
 
         LocationEntity locationEntity = locationRepository
@@ -38,7 +40,12 @@ public class LocationService {
                 .fromEntityToDomain(locationEntity);
     }
 
+    @Transactional
     public Location getLocationById(Long id) {
+
+        if(!locationRepository.existsById(id)){
+            throw new NoSuchElementException("Location not found with id: " + id);
+        }
 
         LocationEntity locationEntity = locationRepository.findById(id)
                 .orElseThrow(() -> new ExpressionException("Location not found with id: " + id));
@@ -51,6 +58,11 @@ public class LocationService {
 
     @Transactional
     public void deleteLocationById(Long id) {
+
+        if (!locationRepository.existsById(id)) {
+            throw new NoSuchElementException("Location not found with id: " + id);
+        }
+
         locationRepository.deleteById(id);
     }
 
