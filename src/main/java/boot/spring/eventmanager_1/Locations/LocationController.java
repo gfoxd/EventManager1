@@ -45,8 +45,7 @@ public class LocationController {
         log.info("LocationController request postLocation");
 
         LocationDto location = locationConverter
-                .toDto(
-                        locationService
+                .toDto(locationService
                                 .createLocation(locationConverter
                                         .toDomain(locationDto)));
 
@@ -55,26 +54,45 @@ public class LocationController {
                 .body(location);
     }
 
-    @DeleteMapping("/locations/{locationId}")
-    public void deleteLocation(
+    @DeleteMapping("/{locationId}")
+    public ResponseEntity deleteLocation(
             @PathVariable ("locationId") Long id
     ){
+        log.info("LocationController request deleteLocation");
 
+        locationService.deleteLocationById(id);
+
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
-    @GetMapping("/locations/{locationId}")
-    public String getLocationById(
+    @GetMapping("/{locationId}")
+    public ResponseEntity getLocationById(
             @PathVariable ("locationId")  Long id
     ){
-        return "Location";
+        log.info("LocationController request getLocationById");
+
+        LocationDto location = locationConverter
+                .toDto(locationService
+                        .getLocationById(id));
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(location);
+
     }
 
-    @PutMapping("/locations/{locationId}")
-    public String updateLocation(
+    @PutMapping("/{locationId}")
+    public LocationDto updateLocation(
             @PathVariable ("locationId") Long id,
             @Valid @RequestBody LocationDto locationDto
     ){
-        return "Location";
+        log.info("LocationController request updateLocation");
+
+        return locationConverter.toDto(
+                locationService.updateLocation(
+                        id, locationConverter.toDomain(locationDto)));
     }
 
 }

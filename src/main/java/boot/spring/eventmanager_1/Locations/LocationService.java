@@ -1,10 +1,11 @@
 package boot.spring.eventmanager_1.Locations;
 
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class LocationService {
@@ -35,6 +36,42 @@ public class LocationService {
 
         return locationConverter
                 .fromEntityToDomain(locationEntity);
+    }
+
+    public Location getLocationById(Long id) {
+
+        LocationEntity locationEntity = locationRepository.findById(id)
+                .orElseThrow(() -> new ExpressionException("Location not found with id: " + id));
+
+        Location location = locationConverter
+                .fromEntityToDomain(locationEntity);
+
+        return location;
+    }
+
+    @Transactional
+    public void deleteLocationById(Long id) {
+        locationRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Location updateLocation(Long id, Location locationToUpdate) {
+
+        if(!locationRepository.existsById(id)){
+            throw new NoSuchElementException("Location not found with id: " + id);
+        }
+
+        locationRepository.updateLocation(
+                id,
+                locationToUpdate.name(),
+                locationToUpdate.address(),
+                locationToUpdate.capacity(),
+                locationToUpdate.description()
+        );
+
+        return locationConverter.fromEntityToDomain(
+                locationRepository.findById(id)
+                        .orElseThrow());
     }
 
 }
