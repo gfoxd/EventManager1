@@ -1,11 +1,11 @@
-package boot.spring.eventmanager_1.Locations;
+package dev.sashanara.eventmanager.Locations;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class LocationService {
@@ -44,7 +44,7 @@ public class LocationService {
     public Location getLocationById(Long id) {
 
         if(!locationRepository.existsById(id)){
-            throw new NoSuchElementException("Location not found with id: " + id);
+            throw new EntityNotFoundException("Location not found with id: " + id);
         }
 
         LocationEntity locationEntity = locationRepository.findById(id)
@@ -60,7 +60,7 @@ public class LocationService {
     public void deleteLocationById(Long id) {
 
         if (!locationRepository.existsById(id)) {
-            throw new NoSuchElementException("Location not found with id: " + id);
+            throw new EntityNotFoundException("Location not found with id: " + id);
         }
 
         locationRepository.deleteById(id);
@@ -70,7 +70,7 @@ public class LocationService {
     public Location updateLocation(Long id, Location locationToUpdate) {
 
         if(!locationRepository.existsById(id)){
-            throw new NoSuchElementException("Location not found with id: " + id);
+            throw new EntityNotFoundException("Location not found with id: " + id);
         }
 
         locationRepository.updateLocation(

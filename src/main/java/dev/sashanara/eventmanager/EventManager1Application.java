@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1;
+package dev.sashanara.eventmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

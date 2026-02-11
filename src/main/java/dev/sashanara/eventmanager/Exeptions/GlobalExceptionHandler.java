@@ -1,5 +1,6 @@
-package boot.spring.eventmanager_1.Exeptions;
+package dev.sashanara.eventmanager.Exeptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,16 +10,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ServerErrorDto> handleNoSuchElementException(
-            NoSuchElementException e
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ServerErrorDto> handleEntityNotFoundException(
+            EntityNotFoundException e
     ) {
         logger.error("Got exception: " + e.getMessage());
 
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
         logger.error("Got exception: " + e.getMessage());
 
         var errorDto = new ServerErrorDto(
-                "Некорректный запрос",
+                "Некорректный запрос (ошибка валидации)",
                 e.getMessage(),
                 LocalDateTime.now());
 

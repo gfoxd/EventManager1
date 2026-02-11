@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1.Locations;
+package dev.sashanara.eventmanager.Locations;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

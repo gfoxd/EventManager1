@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1.Exeptions;
+package dev.sashanara.eventmanager.Exeptions;
 
 import java.time.LocalDateTime;
 
