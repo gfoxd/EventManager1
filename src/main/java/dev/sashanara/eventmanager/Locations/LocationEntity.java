@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1.Locations;
+package dev.sashanara.eventmanager.Locations;
 
 import jakarta.persistence.*;
 

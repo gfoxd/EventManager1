@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1.Locations;
+package dev.sashanara.eventmanager.Locations;
 
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,12 +30,10 @@ public class LocationController {
     public List<LocationDto> getAllLocations() {
         log.info("LocationController request getAllLocations");
 
-        List<LocationDto> locations = locationService.getAllLocations()
+        return locationService.getAllLocations()
                 .stream()
                 .map(locationConverter::toDto)
                 .toList();
-
-        return locations;
     }
 
     @PostMapping

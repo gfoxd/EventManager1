@@ -1,4 +1,4 @@
-package boot.spring.eventmanager_1;
+package dev.sashanara.eventmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
