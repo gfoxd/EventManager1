@@ -1,13 +1,18 @@
 package dev.sashanara.eventmanager.Users;
 
+import dev.sashanara.eventmanager.Exeptions.AgeValidationException;
+import dev.sashanara.eventmanager.Exeptions.LoginAlreadyExistsException;
 import dev.sashanara.eventmanager.Locations.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.xml.bind.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.security.auth.login.LoginException;
 
 import static dev.sashanara.eventmanager.Users.Role.USER;
 
@@ -45,7 +50,11 @@ public class UserService {
     public User registerUser(User user) {
 
         if (!(userRepository.findByLogin(user.login()) == null)){
-            throw new DataIntegrityViolationException("Login already exists");
+            throw new LoginAlreadyExistsException("Login already exists");
+        }
+
+        if (user.age() < 18) {
+            throw new AgeValidationException("Age must be over 18");
         }
 
         String hashedPassword = passwordEncoder.encode(user.password());

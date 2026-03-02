@@ -4,7 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -65,15 +64,32 @@ public class GlobalExceptionHandler {
                 .body(errorDto);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ServerErrorDto> handleViolationException(
-            Exception e
+    @ExceptionHandler(LoginAlreadyExistsException.class)
+    public ResponseEntity<ServerErrorDto> handleViolationLoginException(
+            LoginAlreadyExistsException e
     ) {
         logger.error("Got exception: " + e.getMessage());
 
         var errorDto = new ServerErrorDto(
                 "Ошибка валидации данных",
                 "Пользователь с таким логином уже существует",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(AgeValidationException.class)
+    public ResponseEntity<ServerErrorDto> handleViolationAgeException(
+            AgeValidationException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Ошибка валидации данных",
+                "Пользователь должен быть совершеннолетним",
                 LocalDateTime.now()
         );
 

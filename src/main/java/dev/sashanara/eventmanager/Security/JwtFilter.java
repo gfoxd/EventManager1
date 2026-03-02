@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         );
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } else {
-                new RuntimeException("User not found");
+                throw new RuntimeException("User not found");
             }
         }
         chain.doFilter(request, response);

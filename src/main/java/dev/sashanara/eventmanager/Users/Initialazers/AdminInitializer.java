@@ -41,6 +41,7 @@ public class AdminInitializer {
             UserEntity admin = new UserEntity(
                     "admin",
                     hashedPassword,
+                    null,
                     Role.ADMIN
             );
 

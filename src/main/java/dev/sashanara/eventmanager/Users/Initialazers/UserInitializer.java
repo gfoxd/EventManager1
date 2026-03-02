@@ -41,6 +41,7 @@ public class UserInitializer {
             UserEntity user = new UserEntity(
                     "user",
                     hashedPassword,
+                    null,
                     Role.USER
             );
 

@@ -1,9 +1,6 @@
 package dev.sashanara.eventmanager.Users;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Null;
-import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.UniqueElements;
+import jakarta.validation.constraints.*;
 
 public record UserDto (
 
@@ -16,6 +13,9 @@ public record UserDto (
 
         @Size(min = 5, max = 30)
         String password,
+
+        @NotNull
+        Integer age,
 
         @Null
         Role role

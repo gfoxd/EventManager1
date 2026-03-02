@@ -1,6 +1,7 @@
 package dev.sashanara.eventmanager.Users;
 
 import dev.sashanara.eventmanager.Security.JwtUtil;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> registerUser (
-            @RequestBody UserDto userDto
+            @Valid
+            @RequestBody
+            UserDto userDto
     ) {
         log.info("UserController request registerUser");
 

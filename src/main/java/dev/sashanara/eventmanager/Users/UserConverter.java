@@ -10,6 +10,7 @@ public class UserConverter {
                 userDto.id(),
                 userDto.login(),
                 userDto.password(),
+                userDto.age(),
                 userDto.role()
         );
     }
@@ -19,6 +20,7 @@ public class UserConverter {
                 userEntity.getId(),
                 userEntity.getLogin(),
                 null,
+                userEntity.getAge(),
                 userEntity.getRole()
         );
     }
@@ -28,6 +30,7 @@ public class UserConverter {
                 user.id(),
                 user.login(),
                 null,
+                user.age(),
                 user.role()
         );
     }
@@ -36,6 +39,7 @@ public class UserConverter {
         return new UserEntity(
                 user.login(),
                 null,
+                user.age(),
                 user.role()
         );
     }
