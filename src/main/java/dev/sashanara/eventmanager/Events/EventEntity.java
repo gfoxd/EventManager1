@@ -12,24 +12,32 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "occupiedPlaces")
     private Integer occupiedPlaces;
 
+    @Column(name = "date")
     private LocalDateTime date;
 
+    @Column(name = "duration")
     private Integer duration;
 
+    @Column(name = "cost")
     private Integer cost;
 
+    @Column(name = "maxPlaces")
     private Integer maxPlaces;
 
+    @Column(name = "locationId")
     private Long locationId;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "ownerId")
     private Long ownerId;
 
+    @Column(name = "status")
     private EventStatus status;
-
 
     public EventEntity() {
     }

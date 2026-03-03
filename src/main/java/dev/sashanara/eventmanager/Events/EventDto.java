@@ -28,7 +28,7 @@ public record EventDto (
         Integer maxPlaces,
 
         @NotNull
-        @Min(0)
+        @Min(1)
         Long locationId,
 
         @NotBlank
