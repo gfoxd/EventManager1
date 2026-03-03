@@ -65,6 +65,38 @@ public class EventEntity {
         this.ownerId = ownerId;
     }
 
+    public EventEntity(
+            Long id,
+            Integer occupiedPlaces,
+            LocalDateTime date,
+            Integer duration,
+            Integer cost,
+            Integer maxPlaces,
+            Long locationId,
+            String name,
+            Long ownerId,
+            EventStatus status
+    ) {
+        this.id = id;
+        this.occupiedPlaces = occupiedPlaces;
+        this.date = date;
+        this.duration = duration;
+        this.cost = cost;
+        this.maxPlaces = maxPlaces;
+        this.locationId = locationId;
+        this.name = name;
+        this.ownerId = ownerId;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Integer getOccupiedPlaces() {
         return occupiedPlaces;
     }
