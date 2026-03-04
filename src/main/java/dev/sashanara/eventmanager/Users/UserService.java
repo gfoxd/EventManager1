@@ -1,19 +1,12 @@
 package dev.sashanara.eventmanager.Users;
 
-import dev.sashanara.eventmanager.Events.Event;
 import dev.sashanara.eventmanager.Exeptions.AgeValidationException;
 import dev.sashanara.eventmanager.Exeptions.LoginAlreadyExistsException;
-import dev.sashanara.eventmanager.Locations.LocationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import jakarta.xml.bind.ValidationException;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.security.auth.login.LoginException;
 
 import static dev.sashanara.eventmanager.Users.Role.USER;
 
@@ -82,5 +75,7 @@ public class UserService {
 
         return userConverter.toDomain(userEntity);
     }
+
+
 
 }

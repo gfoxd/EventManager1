@@ -3,6 +3,7 @@ package dev.sashanara.eventmanager.Events;
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
 import dev.sashanara.eventmanager.Locations.LocationRepository;
 import dev.sashanara.eventmanager.Registration.Registration;
+import dev.sashanara.eventmanager.Security.JwtUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,16 +13,19 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final EventConverter eventConverter;
+    private final JwtUtil jwtUtil;
 
     public EventService(
             EventRepository eventRepository,
-            EventConverter eventConverter
+            EventConverter eventConverter,
+            JwtUtil jwtUtil
     ) {
         this.eventRepository = eventRepository;
         this.eventConverter = eventConverter;
+        this.jwtUtil = jwtUtil;
     }
 
-    public Event createEvent(Event event) {
+    public Event createEvent(String token, Event event) {
         return null;
     }
 
@@ -33,7 +37,7 @@ public class EventService {
         return null;
     }
 
-    public Event updateEvent(Long eventId, Event event) {
+    public Event updateEvent(String token, Long eventId, Event event) {
         return null;
     }
 
@@ -41,19 +45,31 @@ public class EventService {
         return null;
     }
 
-    public List<Event> searchEventsByUserId() {
+    public List<Event> searchEventsByUserToken(String token) {
+
+        Long userId = getUserIdFromToken(token);
+
+
+
         return null;
     }
 
-    public Registration registerUserForTheEvent(Long userId, Long eventId) {
+    public Registration registerUserForTheEvent(String token, Long eventId) {
         return null;
     }
 
-    public void deleteUserRegistrationForTheEvent(Long userId, Long eventId) {
+    public void deleteUserRegistrationForTheEvent(String token, Long eventId) {
 
     }
 
-    public List<Event> findAllEventsByUserId(Long userId) {
+    public List<Event> findAllEventsByUserToken(String token) {
         return null;
+    }
+
+    public Long getUserIdFromToken(String token) {
+
+        jwtUtil.validateToken(token);
+
+        return jwtUtil.getIdFromToken(token);
     }
 }

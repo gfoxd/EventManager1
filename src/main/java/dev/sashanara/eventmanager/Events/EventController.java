@@ -3,6 +3,7 @@ package dev.sashanara.eventmanager.Events;
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequestDto;
 import dev.sashanara.eventmanager.Registration.RegistrationConverter;
 import dev.sashanara.eventmanager.Registration.RegistrationDto;
+import dev.sashanara.eventmanager.Security.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -34,12 +35,14 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<EventDto> createEvent(
-            @RequestBody EventDto eventDto
+            @RequestBody EventDto eventDto,
+            @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to create event");
 
         EventDto createdEventDto = eventConverter.toDto(
                 eventService.createEvent(
+                        token,
                         eventConverter.toDomain(eventDto)
         ));
 
@@ -79,12 +82,14 @@ public class EventController {
     @PutMapping("/{eventId}")
     public ResponseEntity<EventDto> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody EventDto eventDto
+            @RequestBody EventDto eventDto,
+            @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to update event by id");
         
         EventDto updatedEvent = eventConverter.toDto(
                 eventService.updateEvent(
+                        token,
                         eventId,
                         eventConverter.toDomain(eventDto)
                 ));
@@ -114,14 +119,12 @@ public class EventController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity< List <EventDto>> getMyEvents(){
+    public ResponseEntity< List <EventDto>> getMyEvents(
+            @RequestHeader(name = "Authorization") String token
+    ){
         log.info("EventController request to get events for a specific user");
 
-        List<Event> eventList = eventService.searchEventsByUserId(
-
-                //todo передавать id пользователя, который послал запрос
-
-        );
+        List<Event> eventList = eventService.searchEventsByUserToken(token);
 
         List<EventDto> eventDtoList = eventList.stream()
                 .map(eventConverter::toDto)
@@ -134,16 +137,13 @@ public class EventController {
 
     @PostMapping("/registrations/{eventId}")
     public ResponseEntity<RegistrationDto> createUserRegistrationForTheEvent(
-            @PathVariable Long eventId
+            @PathVariable Long eventId,
+            @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request for user registration for the event");
 
-        //todo передавать id пользователя, который послал запрос
-
-        Long userId = null;
-
         RegistrationDto registrationDto = registrationConverter.toDto(
-                eventService.registerUserForTheEvent(userId, eventId)
+                eventService.registerUserForTheEvent(token, eventId)
         );
 
         return ResponseEntity
@@ -153,15 +153,12 @@ public class EventController {
 
     @DeleteMapping("/registrations/cancel/{eventId}")
     public ResponseEntity deleteUserRegistrationForTheEvent(
-            @PathVariable Long eventId
+            @PathVariable Long eventId,
+            @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request for user Cancel registration for the event");
 
-        //todo передавать id пользователя, который послал запрос
-
-        Long userId = null;
-
-        eventService.deleteUserRegistrationForTheEvent(userId, eventId);
+        eventService.deleteUserRegistrationForTheEvent(token, eventId);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -169,15 +166,13 @@ public class EventController {
     }
 
     @GetMapping("/registrations/my")
-    public ResponseEntity< List <EventDto> > getMyRegistrations(){
+    public ResponseEntity< List <EventDto> > getMyRegistrations(
+            @RequestHeader(name = "Authorization") String token
+    ){
 
         log.info("EventController request to get events for a specific user");
 
-        //todo передавать id пользователя, который послал запрос
-
-        Long userId = null;
-
-        List<Event> eventList = eventService.findAllEventsByUserId(userId);
+        List<Event> eventList = eventService.findAllEventsByUserToken(token);
 
         List<EventDto> eventDtoList = eventList.stream()
                 .map(eventConverter::toDto)
