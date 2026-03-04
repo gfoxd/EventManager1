@@ -1,5 +1,6 @@
 package dev.sashanara.eventmanager.Users;
 
+import dev.sashanara.eventmanager.Events.Event;
 import dev.sashanara.eventmanager.Exeptions.AgeValidationException;
 import dev.sashanara.eventmanager.Exeptions.LoginAlreadyExistsException;
 import dev.sashanara.eventmanager.Locations.LocationRepository;

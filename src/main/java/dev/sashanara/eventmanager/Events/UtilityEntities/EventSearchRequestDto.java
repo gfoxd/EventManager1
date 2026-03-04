@@ -1,5 +1,6 @@
-package dev.sashanara.eventmanager.Events;
+package dev.sashanara.eventmanager.Events.UtilityEntities;
 
+import dev.sashanara.eventmanager.Events.EventStatus;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;

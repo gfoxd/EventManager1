@@ -1,5 +1,7 @@
 package dev.sashanara.eventmanager.Events;
 
+import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
+import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequestDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,6 +49,22 @@ public class EventConverter {
                 eventEntity.getName(),
                 eventEntity.getOwnerId(),
                 eventEntity.getStatus()
+        );
+    }
+
+    public EventSearchRequest toDomain(EventSearchRequestDto eventSearchRequestDto) {
+        return new EventSearchRequest(
+                eventSearchRequestDto.name(),
+                eventSearchRequestDto.minPlaces(),
+                eventSearchRequestDto.maxPlaces(),
+                eventSearchRequestDto.dateStartAfter(),
+                eventSearchRequestDto.dateStartBefore(),
+                eventSearchRequestDto.minCost(),
+                eventSearchRequestDto.maxCost(),
+                eventSearchRequestDto.minDuration(),
+                eventSearchRequestDto.maxDuration(),
+                eventSearchRequestDto.locationId(),
+                eventSearchRequestDto.status()
         );
     }
 
