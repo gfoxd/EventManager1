@@ -1,69 +1,160 @@
 package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
-import dev.sashanara.eventmanager.Locations.LocationRepository;
+import dev.sashanara.eventmanager.Locations.Location;
+import dev.sashanara.eventmanager.Locations.LocationService;
 import dev.sashanara.eventmanager.Registration.Registration;
 import dev.sashanara.eventmanager.Security.JwtUtil;
+import dev.sashanara.eventmanager.Users.Role;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
 
     private final EventRepository eventRepository;
     private final EventConverter eventConverter;
+    private final LocationService locationService;
     private final JwtUtil jwtUtil;
 
     public EventService(
             EventRepository eventRepository,
             EventConverter eventConverter,
+            LocationService locationService,
             JwtUtil jwtUtil
     ) {
         this.eventRepository = eventRepository;
         this.eventConverter = eventConverter;
+        this.locationService = locationService;
         this.jwtUtil = jwtUtil;
     }
 
+    //todo переделать Ex
+    //todo переделать Ex
+    //todo переделать Ex
+    //todo переделать Ex
+    //todo переделать Ex
+
+    @Transactional
     public Event createEvent(String token, Event event) {
-        return null;
+
+        if (event.duration() < 30){
+            throw new IllegalArgumentException("Event duration should be at least 30");
+        }
+
+        if (event.date().isBefore(LocalDateTime.now())){
+            throw new IllegalArgumentException("The event must be in the future");
+        }
+
+        Location location = locationService.getLocationById(
+                event.locationId());
+
+        if (event.maxPlaces() > location.capacity()) {
+            throw new IllegalArgumentException("The location has to be less than the maximum number of places");
+        }
+
+        EventEntity eventEntityToSave = eventConverter.toEntity(event);
+
+        eventEntityToSave.setOwnerId(getUserIdFromToken(token));
+        eventEntityToSave.setStatus(EventStatus.WAIT_START);
+
+        eventEntityToSave = eventRepository.save(eventEntityToSave);
+
+        return eventConverter.toDomain(eventEntityToSave);
     }
 
-    public void deleteEvent(Long eventId) {
+    @Transactional
+    public void deleteEvent(Long eventId, String token) {
 
+        if (!ownerOrAdmin(token, eventId)) {
+            throw new EntityNotFoundException("insufficient rights");
+        }
+        eventRepository.deleteById(eventId);
     }
 
     public Event getEventById(Long eventId) {
-        return null;
+
+        if (!eventRepository.existsById(eventId)) {
+            throw new IllegalArgumentException("Event with id " + eventId + " does not exist");
+        }
+
+        return eventConverter.toDomain(
+                eventRepository.getById(eventId)
+        );
     }
 
+    @Transactional
     public Event updateEvent(String token, Long eventId, Event event) {
-        return null;
+
+        if (!ownerOrAdmin(token, eventId)) {
+            throw new EntityNotFoundException("insufficient rights");
+        }
+
+        eventRepository.updateEvent(
+                eventId,
+                event.date(),
+                event.duration(),
+                event.cost(),
+                event.maxPlaces(),
+                event.locationId(),
+                event.name()
+        );
+
+        return eventConverter.toDomain(
+                eventRepository.getById(eventId)
+        );
     }
 
     public List<Event> searchEvents(EventSearchRequest eventSearchRequest) {
-        return null;
+
+        List<EventEntity> eventEntityList = eventRepository.findEventsBySearchRequest(
+                eventSearchRequest.name(),
+                eventSearchRequest.minPlaces(),
+                eventSearchRequest.maxPlaces(),
+                eventSearchRequest.dateStartAfter(),
+                eventSearchRequest.dateStartBefore(),
+                eventSearchRequest.minCost(),
+                eventSearchRequest.maxCost(),
+                eventSearchRequest.minDuration(),
+                eventSearchRequest.maxDuration(),
+                eventSearchRequest.locationId(),
+                eventSearchRequest.status()
+        );
+
+        return eventEntityList.stream()
+                .map(eventConverter::toDomain)
+                .collect(Collectors.toList());
     }
 
     public List<Event> searchEventsByUserToken(String token) {
 
+        Long ownerId = getUserIdFromToken(token);
+
+        List<EventEntity> eventEntityList = eventRepository.getEventsByOwnerId(ownerId);
+
+        return eventEntityList.stream()
+                .map(eventConverter::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    public boolean ownerOrAdmin(String token, Long eventId) {
+
         Long userId = getUserIdFromToken(token);
 
+        if (!eventRepository.existsById(eventId)) {
+            throw new IllegalArgumentException("Event with id " + eventId + " does not exist");
+        }
+        EventEntity eventEntity = eventRepository.getById(eventId);
 
+        boolean isOwner = eventEntity.getOwnerId().equals(userId);
+        boolean isAdmin = getUserRoleFromToken(token).equals(Role.ADMIN);
 
-        return null;
-    }
-
-    public Registration registerUserForTheEvent(String token, Long eventId) {
-        return null;
-    }
-
-    public void deleteUserRegistrationForTheEvent(String token, Long eventId) {
-
-    }
-
-    public List<Event> findAllEventsByUserToken(String token) {
-        return null;
+        return isOwner || isAdmin;
     }
 
     public Long getUserIdFromToken(String token) {
@@ -72,4 +163,11 @@ public class EventService {
 
         return jwtUtil.getIdFromToken(token);
     }
+
+    public Role getUserRoleFromToken(String token) {
+        jwtUtil.validateToken(token);
+
+        return jwtUtil.getRoleFromToken(token);
+    }
+
 }

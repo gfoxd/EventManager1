@@ -16,7 +16,7 @@ public record EventDto (
         LocalDateTime date,
 
         @NotNull
-        @Min(30)
+        @Min(1)
         Integer duration,
 
         @NotNull
@@ -24,7 +24,7 @@ public record EventDto (
         Integer cost,
 
         @NotNull
-        @Min(0)
+        @Min(1)
         Integer maxPlaces,
 
         @NotNull

@@ -21,16 +21,13 @@ public class EventController {
 
     private final EventConverter eventConverter;
     private final EventService eventService;
-    private final RegistrationConverter registrationConverter;
 
     public EventController(
             EventConverter eventConverter,
-            EventService eventService,
-            RegistrationConverter registrationConverter
+            EventService eventService
     ) {
         this.eventConverter = eventConverter;
         this.eventService = eventService;
-        this.registrationConverter = new RegistrationConverter();
     }
 
     @PostMapping
@@ -53,11 +50,12 @@ public class EventController {
 
     @DeleteMapping("/{eventId}")
     public ResponseEntity deleteEvent(
-            @PathVariable Long eventId
+            @PathVariable Long eventId,
+            @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to delete event");
 
-        eventService.deleteEvent(eventId);
+        eventService.deleteEvent(eventId, token);
 
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -134,54 +132,5 @@ public class EventController {
                 .status(HttpStatus.OK)
                 .body(eventDtoList);
     }
-
-    @PostMapping("/registrations/{eventId}")
-    public ResponseEntity<RegistrationDto> createUserRegistrationForTheEvent(
-            @PathVariable Long eventId,
-            @RequestHeader(name = "Authorization") String token
-    ) {
-        log.info("EventController request for user registration for the event");
-
-        RegistrationDto registrationDto = registrationConverter.toDto(
-                eventService.registerUserForTheEvent(token, eventId)
-        );
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(registrationDto);
-    }
-
-    @DeleteMapping("/registrations/cancel/{eventId}")
-    public ResponseEntity deleteUserRegistrationForTheEvent(
-            @PathVariable Long eventId,
-            @RequestHeader(name = "Authorization") String token
-    ) {
-        log.info("EventController request for user Cancel registration for the event");
-
-        eventService.deleteUserRegistrationForTheEvent(token, eventId);
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
-    }
-
-    @GetMapping("/registrations/my")
-    public ResponseEntity< List <EventDto> > getMyRegistrations(
-            @RequestHeader(name = "Authorization") String token
-    ){
-
-        log.info("EventController request to get events for a specific user");
-
-        List<Event> eventList = eventService.findAllEventsByUserToken(token);
-
-        List<EventDto> eventDtoList = eventList.stream()
-                .map(eventConverter::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(eventDtoList);
-    }
-
 
 }
