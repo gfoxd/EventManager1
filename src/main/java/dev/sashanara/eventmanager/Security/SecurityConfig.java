@@ -62,6 +62,17 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/locations/{locationId}").hasAnyRole("ADMIN", "USER")
                                 .requestMatchers(HttpMethod.PUT, "/locations/{locationId}").hasRole("ADMIN")
 
+                                .requestMatchers(HttpMethod.POST, "/events").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/events/{eventId}").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/events/{eventId}").hasAnyRole("ADMIN",  "USER")
+                                .requestMatchers(HttpMethod.PUT, "/events/{eventId}").hasAnyRole("ADMIN",  "USER")
+                                .requestMatchers(HttpMethod.POST, "/events/search").hasAnyRole("ADMIN", "USER")
+                                .requestMatchers(HttpMethod.GET, "/events/my").hasRole("USER")
+
+                                .requestMatchers(HttpMethod.POST, "/events/registrations/{eventId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.DELETE, "/events/registrations/cancel/{eventId}").hasRole("USER")
+                                .requestMatchers(HttpMethod.GET, "/events/registrations/my").hasRole("USER")
+
                                 .anyRequest().authenticated())
                 .logout(logout -> logout.logoutSuccessUrl("/users/auth"))
 
