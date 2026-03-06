@@ -173,4 +173,8 @@ public class EventEntity {
     public void setStatus(EventStatus status) {
         this.status = status;
     }
+
+    public List<RegistrationEntity> getRegistrations() {
+        return registrations;
+    }
 }

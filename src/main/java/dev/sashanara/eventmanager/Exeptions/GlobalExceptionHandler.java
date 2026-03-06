@@ -165,4 +165,21 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorDto);
     }
+
+    @ExceptionHandler(NotEnoughPlacesException.class)
+    public ResponseEntity<ServerErrorDto> handleNotEnoughPlacesException(
+            NotEnoughPlacesException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Недостаточно мест",
+                "Все места уже заняты",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
 }

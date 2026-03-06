@@ -176,4 +176,16 @@ public class EventService {
         return jwtUtil.getRoleFromToken(token);
     }
 
+    public Integer getQuantityRegistrationsByEventId(Long eventId) {
+        EventEntity eventEntity = eventRepository.getById(eventId);
+
+        return eventEntity.getRegistrations().size();
+    }
+
+    public Integer getMaxPlacesByEventId(Long eventId) {
+        EventEntity eventEntity = eventRepository.getById(eventId);
+
+        return eventEntity.getMaxPlaces();
+    }
+
 }

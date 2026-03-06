@@ -1,5 +1,6 @@
 package dev.sashanara.eventmanager.Registration;
 
+import dev.sashanara.eventmanager.Events.EventEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RegistrationRepository extends JpaRepository<RegistrationEntity,Long> {
+public interface RegistrationRepository extends JpaRepository<RegistrationEntity, EventEntity> {
 
     @Modifying
     @Query("""
@@ -30,8 +31,4 @@ WHERE (:userId = r.userId)
             @Param("userId") Long userId
     );
 
-    Optional<RegistrationEntity> findByUserIdAndEventEntityId(
-            Long userId,
-            Long eventId
-    );
 }

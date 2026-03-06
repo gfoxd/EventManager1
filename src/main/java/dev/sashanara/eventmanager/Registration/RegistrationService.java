@@ -3,6 +3,7 @@ package dev.sashanara.eventmanager.Registration;
 import dev.sashanara.eventmanager.Events.*;
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Exeptions.EventStatusExceptions;
+import dev.sashanara.eventmanager.Exeptions.NotEnoughPlacesException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,14 @@ public class RegistrationService {
     public Registration registerUserForTheEvent(String token, Long eventId) {
 
         EventStatus eventStatus = eventService.getEventById(eventId).status();
-
         if (!eventStatus.equals(EventStatus.WAIT_START)) {
             throw new EventStatusExceptions("Not supported EventStatus");
+        }
+
+        Integer quantityRegistrations = eventService.getQuantityRegistrationsByEventId(eventId);
+        Integer maxPlaces = eventService.getMaxPlacesByEventId(eventId);
+        if (quantityRegistrations >= maxPlaces) {
+            throw new NotEnoughPlacesException("Not enough Places");
         }
 
         Long userId = eventService.getUserIdFromToken(token);
