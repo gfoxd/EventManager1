@@ -1,6 +1,10 @@
 package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
+import dev.sashanara.eventmanager.Exeptions.CapacityValidationException;
+import dev.sashanara.eventmanager.Exeptions.DateTimeValidationException;
+import dev.sashanara.eventmanager.Exeptions.DurationValidationException;
+import dev.sashanara.eventmanager.Exeptions.InsufficientRightsException;
 import dev.sashanara.eventmanager.Locations.Location;
 import dev.sashanara.eventmanager.Locations.LocationService;
 import dev.sashanara.eventmanager.Registration.Registration;
@@ -34,28 +38,22 @@ public class EventService {
         this.jwtUtil = jwtUtil;
     }
 
-    //todo переделать Ex
-    //todo переделать Ex
-    //todo переделать Ex
-    //todo переделать Ex
-    //todo переделать Ex
-
     @Transactional
     public Event createEvent(String token, Event event) {
 
         if (event.duration() < 30){
-            throw new IllegalArgumentException("Event duration should be at least 30");
+            throw new DurationValidationException("Event duration should be at least 30");
         }
 
         if (event.date().isBefore(LocalDateTime.now())){
-            throw new IllegalArgumentException("The event must be in the future");
+            throw new DateTimeValidationException("The event must be in the future");
         }
 
         Location location = locationService.getLocationById(
                 event.locationId());
 
         if (event.maxPlaces() > location.capacity()) {
-            throw new IllegalArgumentException("The location has to be less than the maximum number of places");
+            throw new CapacityValidationException("The location has to be less than the maximum number of places");
         }
 
         EventEntity eventEntityToSave = eventConverter.toEntity(event);
@@ -72,7 +70,7 @@ public class EventService {
     public void deleteEvent(Long eventId, String token) {
 
         if (!ownerOrAdmin(token, eventId)) {
-            throw new EntityNotFoundException("insufficient rights");
+            throw new InsufficientRightsException("insufficient rights");
         }
         eventRepository.deleteById(eventId);
     }
@@ -80,7 +78,7 @@ public class EventService {
     public Event getEventById(Long eventId) {
 
         if (!eventRepository.existsById(eventId)) {
-            throw new IllegalArgumentException("Event with id " + eventId + " does not exist");
+            throw new EntityNotFoundException("Event with id " + eventId + " does not exist");
         }
 
         return eventConverter.toDomain(
@@ -92,7 +90,7 @@ public class EventService {
     public Event updateEvent(String token, Long eventId, Event event) {
 
         if (!ownerOrAdmin(token, eventId)) {
-            throw new EntityNotFoundException("insufficient rights");
+            throw new InsufficientRightsException("insufficient rights");
         }
 
         eventRepository.updateEvent(
@@ -126,6 +124,10 @@ public class EventService {
                 eventSearchRequest.status()
         );
 
+        if (eventEntityList.isEmpty()) {
+            throw new EntityNotFoundException("No events found");
+        }
+
         return eventEntityList.stream()
                 .map(eventConverter::toDomain)
                 .collect(Collectors.toList());
@@ -137,6 +139,10 @@ public class EventService {
 
         List<EventEntity> eventEntityList = eventRepository.getEventsByOwnerId(ownerId);
 
+        if (eventEntityList.isEmpty()) {
+            throw new EntityNotFoundException("No events found");
+        }
+
         return eventEntityList.stream()
                 .map(eventConverter::toDomain)
                 .collect(Collectors.toList());
@@ -147,7 +153,7 @@ public class EventService {
         Long userId = getUserIdFromToken(token);
 
         if (!eventRepository.existsById(eventId)) {
-            throw new IllegalArgumentException("Event with id " + eventId + " does not exist");
+            throw new EntityNotFoundException("Event with id " + eventId + " does not exist");
         }
         EventEntity eventEntity = eventRepository.getById(eventId);
 

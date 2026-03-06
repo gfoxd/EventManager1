@@ -16,7 +16,6 @@ public interface EventRepository extends JpaRepository<EventEntity,Long> {
 
     Optional<EventEntity> findById(Long id);
 
-    @Transactional
     @Modifying
     @Query("""
 UPDATE EventEntity e

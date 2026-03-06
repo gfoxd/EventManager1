@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AgeValidationException.class)
-    public ResponseEntity<ServerErrorDto> handleViolationAgeException(
+    public ResponseEntity<ServerErrorDto> handleValidationAgeException(
             AgeValidationException e
     ) {
         logger.error("Got exception: " + e.getMessage());
@@ -98,4 +98,71 @@ public class GlobalExceptionHandler {
                 .body(errorDto);
     }
 
+    @ExceptionHandler(DurationValidationException.class)
+    public ResponseEntity<ServerErrorDto> handleValidationDurationException(
+            DurationValidationException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Ошибка валидации данных",
+                "Длительность мероприятия должна быть больше или равна 30",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(DateTimeValidationException.class)
+    public ResponseEntity<ServerErrorDto> handleValidationDateTimeException(
+            DateTimeValidationException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Ошибка валидации данных",
+                "кол-во мест мероприятия должно быть меньше или равно вместимости места",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(InsufficientRightsException.class)
+    public ResponseEntity<ServerErrorDto> handleInsufficientRightsException(
+            InsufficientRightsException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "недостаточно прав",
+                "запрос должен исходить от владельца или админа",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(EventStatusExceptions.class)
+    public ResponseEntity<ServerErrorDto> handleEventStatusExceptions(
+            EventStatusExceptions e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Статус события несовместим",
+                "запрос невозможен с текущим статусом события",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
 }

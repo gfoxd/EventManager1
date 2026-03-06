@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
-    @Transactional
     @Modifying
     @Query("""
     UPDATE LocationEntity l
