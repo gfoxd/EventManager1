@@ -1,5 +1,6 @@
 package dev.sashanara.eventmanager.Registration;
 
+import dev.sashanara.eventmanager.Events.EventEntity;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,31 +11,32 @@ public class RegistrationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "userId")
+    @Column(name = "userId", nullable = false)
     private Long userId;
 
-    @Column(name = "eventId")
-    private Long eventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "eventId", referencedColumnName = "id")
+    private EventEntity eventEntity;
 
     public RegistrationEntity() {
     }
 
     public RegistrationEntity(
-            Long id,
             Long userId,
-            Long eventId
+            EventEntity eventEntity
     ) {
-        this.id = id;
         this.userId = userId;
-        this.eventId = eventId;
+        this.eventEntity = eventEntity;
     }
 
     public RegistrationEntity(
+            Long id,
             Long userId,
-            Long eventId
+            EventEntity eventEntity
     ) {
+        this.id = id;
         this.userId = userId;
-        this.eventId = eventId;
+        this.eventEntity = eventEntity;
     }
 
     public Long getId() {
@@ -53,11 +55,11 @@ public class RegistrationEntity {
         this.userId = userId;
     }
 
-    public Long getEventId() {
-        return eventId;
+    public EventEntity getEventEntity() {
+        return eventEntity;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setEventEntity(EventEntity eventEntity) {
+        this.eventEntity = eventEntity;
     }
 }

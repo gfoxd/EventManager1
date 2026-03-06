@@ -1,40 +1,46 @@
 package dev.sashanara.eventmanager.Registration;
 
+import dev.sashanara.eventmanager.Events.EventConverter;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RegistrationConverter {
 
-    public RegistrationDto toDto(Registration registration){
+    private final EventConverter eventConverter;
+
+    public RegistrationConverter(EventConverter eventConverter) {
+        this.eventConverter = eventConverter;
+    }
+
+    public RegistrationDto toDto(Registration registration) {
         return new RegistrationDto(
                 registration.id(),
                 registration.userId(),
-                registration.eventId()
+                eventConverter.toDto(registration.event())
         );
     }
 
-    public Registration toDomain(RegistrationDto registrationDto){
+    public Registration toDomain(RegistrationDto registrationDto) {
         return new Registration(
                 registrationDto.id(),
                 registrationDto.userId(),
-                registrationDto.eventId()
+                eventConverter.toDomain(registrationDto.eventDto())
         );
     }
 
-    public Registration toDomain(RegistrationEntity registrationEntity){
+    public Registration toDomain(RegistrationEntity registrationEntity) {
         return new Registration(
                 registrationEntity.getId(),
                 registrationEntity.getUserId(),
-                registrationEntity.getEventId()
+                eventConverter.toDomain(registrationEntity.getEventEntity())
         );
     }
 
-    public RegistrationEntity toEntity(Registration registration){
+    public RegistrationEntity toEntity(Registration registration) {
         return new RegistrationEntity(
                 registration.id(),
                 registration.userId(),
-                registration.eventId()
+                eventConverter.toEntity(registration.event())
         );
     }
-
 }

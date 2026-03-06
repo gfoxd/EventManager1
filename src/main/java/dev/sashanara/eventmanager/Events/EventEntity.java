@@ -1,8 +1,10 @@
 package dev.sashanara.eventmanager.Events;
 
+import dev.sashanara.eventmanager.Registration.RegistrationEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -39,10 +41,12 @@ public class EventEntity {
     @Column(name = "status")
     private EventStatus status;
 
+    @OneToMany(mappedBy = "eventEntity", fetch = FetchType.LAZY)
+    private List<RegistrationEntity> registrations;
+
     public EventEntity() {
     }
 
-    //TODO передать на билдер?
     public EventEntity(
             EventStatus status,
             String name,

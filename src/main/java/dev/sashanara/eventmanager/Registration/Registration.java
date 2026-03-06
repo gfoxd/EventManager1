@@ -1,12 +1,12 @@
 package dev.sashanara.eventmanager.Registration;
 
-import jakarta.persistence.Column;
+import dev.sashanara.eventmanager.Events.Event;
 
 public record Registration(
 
         Long id,
         Long userId,
-        Long eventId
+        Event event
 
 ) {
 }

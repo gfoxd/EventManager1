@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RegistrationRepository extends JpaRepository<RegistrationEntity,Long> {
@@ -14,7 +15,7 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
     @Modifying
     @Query("""
 DELETE FROM RegistrationEntity r
-WHERE (:userId = r.userId AND :eventId = r.eventId)
+WHERE (:userId = r.userId AND  r.eventEntity.id = :eventId)
 """)
     void deleteByUserIdAndEventId(
             @Param("userId") Long userId,
@@ -25,7 +26,12 @@ WHERE (:userId = r.userId AND :eventId = r.eventId)
 SELECT r FROM RegistrationEntity r
 WHERE (:userId = r.userId)
 """)
-    List<Long> findAllByUserId(
+    List<RegistrationEntity> findAllByUserId(
             @Param("userId") Long userId
+    );
+
+    Optional<RegistrationEntity> findByUserIdAndEventEntityId(
+            Long userId,
+            Long eventId
     );
 }

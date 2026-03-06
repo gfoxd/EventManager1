@@ -1,7 +1,6 @@
 package dev.sashanara.eventmanager.Registration;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import dev.sashanara.eventmanager.Events.EventDto;
 import jakarta.validation.constraints.Null;
 
 public record RegistrationDto(
@@ -12,9 +11,8 @@ public record RegistrationDto(
         @Null
         Long userId,
 
-        @NotNull
-        @Min(1)
-        Long eventId
+        @Null
+        EventDto eventDto
 
 ) {
 }
