@@ -1,6 +1,6 @@
 package dev.sashanara.eventmanager.Events;
 
-import jakarta.transaction.Transactional;
+import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,5 +1,6 @@
 package dev.sashanara.eventmanager.Events;
 
+import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
 import dev.sashanara.eventmanager.Exeptions.CapacityValidationException;
 import dev.sashanara.eventmanager.Exeptions.DateTimeValidationException;
@@ -7,7 +8,6 @@ import dev.sashanara.eventmanager.Exeptions.DurationValidationException;
 import dev.sashanara.eventmanager.Exeptions.InsufficientRightsException;
 import dev.sashanara.eventmanager.Locations.Location;
 import dev.sashanara.eventmanager.Locations.LocationService;
-import dev.sashanara.eventmanager.Registration.Registration;
 import dev.sashanara.eventmanager.Security.JwtUtil;
 import dev.sashanara.eventmanager.Users.Role;
 import jakarta.persistence.EntityNotFoundException;

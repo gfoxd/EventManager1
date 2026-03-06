@@ -1,5 +1,7 @@
 package dev.sashanara.eventmanager.Events;
 
+import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
+
 import java.time.LocalDateTime;
 
 public record Event(

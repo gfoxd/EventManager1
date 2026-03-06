@@ -1,5 +1,6 @@
 package dev.sashanara.eventmanager.Events;
 
+import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Registration.RegistrationEntity;
 import jakarta.persistence.*;
 

@@ -1,4 +1,4 @@
-package dev.sashanara.eventmanager.Events;
+package dev.sashanara.eventmanager.Events.EventStatusManager;
 
 public enum EventStatus {
 

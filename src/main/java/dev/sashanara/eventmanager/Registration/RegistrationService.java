@@ -1,6 +1,7 @@
 package dev.sashanara.eventmanager.Registration;
 
 import dev.sashanara.eventmanager.Events.*;
+import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Exeptions.EventStatusExceptions;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
