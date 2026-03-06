@@ -3,7 +3,6 @@ package dev.sashanara.eventmanager.Registration;
 import dev.sashanara.eventmanager.Events.Event;
 import dev.sashanara.eventmanager.Events.EventConverter;
 import dev.sashanara.eventmanager.Events.EventDto;
-import dev.sashanara.eventmanager.Events.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -40,6 +39,8 @@ public class RegistrationController {
     ) {
         log.info("EventController request for user registration for the event");
 
+        token = token.substring(7).trim();
+
         RegistrationDto registrationDto = registrationConverter.toDto(
                 registrationService.registerUserForTheEvent(token, eventId)
         );
@@ -56,6 +57,8 @@ public class RegistrationController {
     ) {
         log.info("EventController request for user Cancel registration for the event");
 
+        token = token.substring(7).trim();
+
         registrationService.deleteUserRegistrationForTheEvent(token, eventId);
 
         return ResponseEntity
@@ -67,8 +70,9 @@ public class RegistrationController {
     public ResponseEntity<List<EventDto>> getMyRegistrations(
             @RequestHeader(name = "Authorization") String token
     ){
-
         log.info("EventController request to get events for a specific user");
+
+        token = token.substring(7).trim();
 
         List<Event> eventList = registrationService.findAllEventsByUserToken(token);
 

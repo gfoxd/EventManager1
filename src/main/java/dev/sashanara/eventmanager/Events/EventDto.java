@@ -1,9 +1,10 @@
 package dev.sashanara.eventmanager.Events;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record EventDto (
 
@@ -14,7 +15,8 @@ public record EventDto (
         Integer occupiedPlaces,
 
         @NotNull
-        LocalDateTime date,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        OffsetDateTime date,
 
         @NotNull
         @Min(1)

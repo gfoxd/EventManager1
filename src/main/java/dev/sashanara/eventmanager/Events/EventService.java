@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class EventService {
             throw new DurationValidationException("Event duration should be at least 30");
         }
 
-        if (event.date().isBefore(LocalDateTime.now())){
+        if (event.date().isBefore(OffsetDateTime.now())){
             throw new DateTimeValidationException("The event must be in the future");
         }
 

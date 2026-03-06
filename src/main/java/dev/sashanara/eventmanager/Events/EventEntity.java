@@ -1,10 +1,12 @@
 package dev.sashanara.eventmanager.Events;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Registration.RegistrationEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -19,7 +21,8 @@ public class EventEntity {
     private Integer occupiedPlaces;
 
     @Column(name = "date")
-    private LocalDateTime date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private OffsetDateTime date;
 
     @Column(name = "duration")
     private Integer duration;
@@ -55,7 +58,7 @@ public class EventEntity {
             Integer maxPlaces,
             Integer cost,
             Integer duration,
-            LocalDateTime date,
+            OffsetDateTime date,
             Integer occupiedPlaces,
             Long ownerId
     ) {
@@ -73,7 +76,7 @@ public class EventEntity {
     public EventEntity(
             Long id,
             Integer occupiedPlaces,
-            LocalDateTime date,
+            OffsetDateTime date,
             Integer duration,
             Integer cost,
             Integer maxPlaces,
@@ -110,11 +113,11 @@ public class EventEntity {
         this.occupiedPlaces = occupiedPlaces;
     }
 
-    public LocalDateTime getDate() {
+    public OffsetDateTime  getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(OffsetDateTime  date) {
         this.date = date;
     }
 

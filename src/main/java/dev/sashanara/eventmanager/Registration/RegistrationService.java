@@ -31,7 +31,10 @@ public class RegistrationService {
     }
 
     @Transactional
-    public Registration registerUserForTheEvent(String token, Long eventId) {
+    public Registration registerUserForTheEvent(
+            String token,
+            Long eventId
+    ) {
 
         EventStatus eventStatus = eventService.getEventById(eventId).status();
         if (!eventStatus.equals(EventStatus.WAIT_START)) {

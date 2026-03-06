@@ -1,9 +1,6 @@
 package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequestDto;
-import dev.sashanara.eventmanager.Registration.RegistrationConverter;
-import dev.sashanara.eventmanager.Registration.RegistrationDto;
-import dev.sashanara.eventmanager.Security.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,6 +34,8 @@ public class EventController {
     ) {
         log.info("EventController request to create event");
 
+        token = token.substring(7).trim();
+
         EventDto createdEventDto = eventConverter.toDto(
                 eventService.createEvent(
                         token,
@@ -54,6 +53,8 @@ public class EventController {
             @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to delete event");
+
+        token = token.substring(7).trim();
 
         eventService.deleteEvent(eventId, token);
 
@@ -84,6 +85,8 @@ public class EventController {
             @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to update event by id");
+
+        token = token.substring(7).trim();
         
         EventDto updatedEvent = eventConverter.toDto(
                 eventService.updateEvent(
@@ -121,6 +124,8 @@ public class EventController {
             @RequestHeader(name = "Authorization") String token
     ){
         log.info("EventController request to get events for a specific user");
+
+        token = token.substring(7).trim();
 
         List<Event> eventList = eventService.searchEventsByUserToken(token);
 

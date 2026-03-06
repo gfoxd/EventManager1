@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ where e.id = :id
 """)
     void updateEvent(
             @Param("id") Long id,
-            @Param("date") LocalDateTime date,
+            @Param("date") OffsetDateTime date,
             @Param("duration") Integer duration,
             @Param("cost") Integer cost,
             @Param("maxPlaces") Integer maxPlaces,
@@ -55,8 +56,8 @@ AND (:status IS NULL OR e.status = :status)
             @Param("name") String name,
             @Param("minPlaces") Integer minPlaces,
             @Param("maxPlaces") Integer maxPlaces,
-            @Param("dateStartAfter") LocalDateTime dateStartAfter,
-            @Param("dateStartBefore") LocalDateTime dateStartBefore,
+            @Param("dateStartAfter") OffsetDateTime dateStartAfter,
+            @Param("dateStartBefore") OffsetDateTime dateStartBefore,
             @Param("minCost") Integer minCost,
             @Param("maxCost") Integer maxCost,
             @Param("minDuration") Integer minDuration,

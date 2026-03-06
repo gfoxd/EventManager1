@@ -4,6 +4,7 @@ import dev.sashanara.eventmanager.Events.EventEntity;
 import dev.sashanara.eventmanager.Events.EventRepository;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -20,10 +21,10 @@ public class EventStatusUpdateService {
     public void updateEventStatuses() {
         List<EventEntity> events = eventRepository.findAll();
 
-        LocalDateTime now = LocalDateTime.now();
+        OffsetDateTime now = OffsetDateTime .now();
 
         for (EventEntity event : events) {
-            LocalDateTime endTime = event.getDate().plusMinutes(event.getDuration());
+            OffsetDateTime endTime = event.getDate().plusMinutes(event.getDuration());
 
             if (now.isAfter(endTime)
                     && !event.getStatus().equals(EventStatus.FINISHED)

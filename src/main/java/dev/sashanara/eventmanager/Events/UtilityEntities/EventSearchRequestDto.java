@@ -4,6 +4,7 @@ import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record EventSearchRequestDto (
 
@@ -16,9 +17,9 @@ public record EventSearchRequestDto (
         @Min(1)
         Integer maxPlaces,
 
-        LocalDateTime dateStartAfter,
+        OffsetDateTime dateStartAfter,
 
-        LocalDateTime dateStartBefore,
+        OffsetDateTime dateStartBefore,
 
         @Min(0)
         Integer minCost,

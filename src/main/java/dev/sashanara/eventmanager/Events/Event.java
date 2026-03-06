@@ -2,13 +2,13 @@ package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record Event(
 
         Long id,
         Integer occupiedPlaces,
-        LocalDateTime date,
+        OffsetDateTime date,
         Integer duration,
         Integer cost,
         Integer maxPlaces,
