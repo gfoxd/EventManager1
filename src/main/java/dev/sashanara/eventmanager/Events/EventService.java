@@ -2,10 +2,7 @@ package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
-import dev.sashanara.eventmanager.Exeptions.CapacityValidationException;
-import dev.sashanara.eventmanager.Exeptions.DateTimeValidationException;
-import dev.sashanara.eventmanager.Exeptions.DurationValidationException;
-import dev.sashanara.eventmanager.Exeptions.InsufficientRightsException;
+import dev.sashanara.eventmanager.Exeptions.*;
 import dev.sashanara.eventmanager.Locations.Location;
 import dev.sashanara.eventmanager.Locations.LocationService;
 import dev.sashanara.eventmanager.Security.JwtUtil;
@@ -73,7 +70,13 @@ public class EventService {
         if (!ownerOrAdmin(token, eventId)) {
             throw new InsufficientRightsException("insufficient rights");
         }
-        eventRepository.deleteById(eventId);
+
+        EventStatus eventStatus = getEventById(eventId).status();
+        if (!eventStatus.equals(EventStatus.WAIT_START)) {
+            throw new EventStatusExceptions("Not supported EventStatus");
+        }
+
+        eventRepository.cancelEventById(eventId, EventStatus.CANCELLED);
     }
 
     public Event getEventById(Long eventId) {

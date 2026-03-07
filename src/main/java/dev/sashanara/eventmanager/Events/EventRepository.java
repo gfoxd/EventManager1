@@ -73,4 +73,15 @@ WHERE (:ownerId = :ownerId)
     List<EventEntity> getEventsByOwnerId(
             @Param("ownerId") Long ownerId
     );
+
+    @Modifying
+    @Query("""
+    UPDATE EventEntity e
+    SET e.status = :status
+    WHERE e.id = :id
+""")
+    void cancelEventById(
+            @Param("id") Long id,
+            @Param("status") EventStatus status
+    );
 }

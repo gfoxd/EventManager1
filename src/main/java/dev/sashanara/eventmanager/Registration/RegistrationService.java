@@ -3,6 +3,7 @@ package dev.sashanara.eventmanager.Registration;
 import dev.sashanara.eventmanager.Events.*;
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Exeptions.EventStatusExceptions;
+import dev.sashanara.eventmanager.Exeptions.InsufficientRightsException;
 import dev.sashanara.eventmanager.Exeptions.NotEnoughPlacesException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,10 @@ public class RegistrationService {
 
     @Transactional
     public void deleteUserRegistrationForTheEvent(String token, Long eventId) {
+
+        if (!eventService.ownerOrAdmin(token, eventId)){
+            throw new InsufficientRightsException("insufficient rights");
+        }
 
         EventStatus eventStatus = eventService.getEventById(eventId).status();
 
