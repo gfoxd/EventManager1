@@ -1,6 +1,7 @@
 package dev.sashanara.eventmanager.Events;
 
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequestDto;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<EventDto> createEvent(
-            @RequestBody EventDto eventDto,
+            @Valid @RequestBody EventDto eventDto,
             @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to create event");
@@ -81,7 +82,7 @@ public class EventController {
     @PutMapping("/{eventId}")
     public ResponseEntity<EventDto> updateEvent(
             @PathVariable Long eventId,
-            @RequestBody EventDto eventDto,
+            @Valid @RequestBody EventDto eventDto,
             @RequestHeader(name = "Authorization") String token
     ) {
         log.info("EventController request to update event by id");
@@ -102,7 +103,7 @@ public class EventController {
 
     @PostMapping("/search")
     public ResponseEntity< List <EventDto> > searchEvent(
-            @RequestBody EventSearchRequestDto eventSearchRequestDto
+            @Valid @RequestBody EventSearchRequestDto eventSearchRequestDto
     ) {
         log.info("EventController request to search event");
 
