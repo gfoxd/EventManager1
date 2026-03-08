@@ -97,6 +97,11 @@ public class EventService {
             throw new InsufficientRightsException("insufficient rights");
         }
 
+        Integer maxPlacesNow = eventRepository.getById(eventId).getMaxPlaces();
+        if (maxPlacesNow < event.maxPlaces()) {
+            throw new maxPlacesDuringUpdateException("Not enough places");
+        }
+
         eventRepository.updateEvent(
                 eventId,
                 event.date(),

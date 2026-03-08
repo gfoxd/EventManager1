@@ -182,4 +182,21 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(errorDto);
     }
+
+    @ExceptionHandler(maxPlacesDuringUpdateException.class)
+    public ResponseEntity<ServerErrorDto> handleMaxPlacesDuringUpdateException(
+            maxPlacesDuringUpdateException e
+    ) {
+        logger.error("Got exception: " + e.getMessage());
+
+        var errorDto = new ServerErrorDto(
+                "Недостаточно мест при обновлении",
+                "Мест при обновлении должно быть больше чем уже зарегистрировано",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
 }
