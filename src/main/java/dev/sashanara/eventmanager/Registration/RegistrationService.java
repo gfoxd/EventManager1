@@ -62,14 +62,11 @@ public class RegistrationService {
     @Transactional
     public void deleteUserRegistrationForTheEvent(String token, Long eventId) {
 
-        if (!eventService.ownerOrAdmin(token, eventId)){
-            throw new InsufficientRightsException("insufficient rights");
-        }
-
         EventStatus eventStatus = eventService.getEventById(eventId).status();
-
         if (eventStatus.equals(EventStatus.STARTED)
-                || eventStatus.equals(EventStatus.FINISHED)) {
+                || eventStatus.equals(EventStatus.FINISHED)
+                || eventStatus.equals(EventStatus.CANCELLED)
+        ) {
             throw new EventStatusExceptions("Not supported EventStatus");
         }
 
