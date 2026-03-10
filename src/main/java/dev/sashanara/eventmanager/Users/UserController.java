@@ -71,6 +71,7 @@ public class UserController {
         );
 
         String token = jwtUtil.generateToken(
+                authenticatedUser.id(),
                 authenticatedUser.login(),
                 authenticatedUser.role()
         );

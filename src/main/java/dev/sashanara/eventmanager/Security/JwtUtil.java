@@ -19,9 +19,10 @@ public class JwtUtil {
 
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String generateToken(String login, Role role) {
+    public String generateToken(Long id, String login, Role role) {
         return Jwts.builder()
                 .setSubject(login)
+                .claim("id", id)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
@@ -74,6 +75,10 @@ public class JwtUtil {
     public Role getRoleFromToken(String token) {
         String role = getClaimFromToken(token, claims -> claims.get("role", String.class));
         return Role.valueOf(role);
+    }
+
+    public Long getIdFromToken(String token) {
+        return getClaimFromToken(token, claims -> claims.get("id", Long.class));
     }
 
 }
