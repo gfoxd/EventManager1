@@ -1,4 +1,4 @@
-package dev.sashanara.eventmanager.Kafka.EventChamges;
+package dev.sashanara.eventmanager.Kafka.EventChanges;
 
 public class FieldChange<T> {
 

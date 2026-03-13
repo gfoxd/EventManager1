@@ -1,6 +1,6 @@
 package dev.sashanara.eventmanager.Kafka;
 
-import dev.sashanara.eventmanager.Kafka.EventChamges.EventChangesMessage;
+import dev.sashanara.eventmanager.Kafka.EventChanges.EventChangesMessage;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package dev.sashanara.eventmanager.Kafka.EventChamges;
+package dev.sashanara.eventmanager.Kafka.EventChanges;
 
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package dev.sashanara.eventmanager.Kafka;
 
-import dev.sashanara.eventmanager.Kafka.EventChamges.EventChangesMessageConverter;
-import dev.sashanara.eventmanager.Kafka.EventChamges.EventChangesMessageDto;
+import dev.sashanara.eventmanager.Kafka.EventChanges.EventChangesMessageConverter;
+import dev.sashanara.eventmanager.Kafka.EventChanges.EventChangesMessageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
