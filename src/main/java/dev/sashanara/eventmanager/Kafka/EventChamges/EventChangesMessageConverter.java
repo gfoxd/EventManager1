@@ -51,8 +51,8 @@ public class EventChangesMessageConverter {
             entity.setStatusNewValue(domain.status().getNewValue());
         }
 
-        if (domain.RegisteredUserIds() != null) {
-            entity.setRegisteredUserIds(new ArrayList<>(domain.RegisteredUserIds()));
+        if (domain.registeredUserIds() != null) {
+            entity.setRegisteredUserIds(new ArrayList<>(domain.registeredUserIds()));
         }
 
         return entity;
@@ -115,7 +115,7 @@ public class EventChangesMessageConverter {
                 domain.duration(),
                 domain.locationId(),
                 domain.status(),
-                domain.RegisteredUserIds()
+                domain.registeredUserIds()
         );
     }
 

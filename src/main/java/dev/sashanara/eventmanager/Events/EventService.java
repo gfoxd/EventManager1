@@ -3,15 +3,18 @@ package dev.sashanara.eventmanager.Events;
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
 import dev.sashanara.eventmanager.Events.UtilityEntities.EventSearchRequest;
 import dev.sashanara.eventmanager.Exeptions.*;
+import dev.sashanara.eventmanager.Kafka.EventChamges.EventChangesMessage;
+import dev.sashanara.eventmanager.Kafka.EventChamges.FieldChange;
+import dev.sashanara.eventmanager.Kafka.KafkaEventProducerService;
 import dev.sashanara.eventmanager.Locations.Location;
 import dev.sashanara.eventmanager.Locations.LocationService;
+import dev.sashanara.eventmanager.Registration.RegistrationEntity;
 import dev.sashanara.eventmanager.Security.JwtUtil;
 import dev.sashanara.eventmanager.Users.Role;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,17 +25,20 @@ public class EventService {
     private final EventRepository eventRepository;
     private final EventConverter eventConverter;
     private final LocationService locationService;
+    private final KafkaEventProducerService kafkaEventProducerService;
     private final JwtUtil jwtUtil;
 
     public EventService(
             EventRepository eventRepository,
             EventConverter eventConverter,
             LocationService locationService,
+            KafkaEventProducerService kafkaEventProducerService,
             JwtUtil jwtUtil
     ) {
         this.eventRepository = eventRepository;
         this.eventConverter = eventConverter;
         this.locationService = locationService;
+        this.kafkaEventProducerService = kafkaEventProducerService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -77,6 +83,20 @@ public class EventService {
         }
 
         eventRepository.cancelEventById(eventId, EventStatus.CANCELLED);
+
+        kafkaEventProducerService.sendEventChanges(
+                EventChangesMessage.builder()
+                        .eventId(eventId)
+                        .changedByUserId(getUserIdFromToken(token))
+                        .ownerId(getOwnerIdByEventId(eventId))
+
+                        .status(new FieldChange<>(EventStatus.WAIT_START,EventStatus.CANCELLED))
+
+                        .registeredUserIds(
+                                getRegisteredUserIdsByEventId(eventId)
+                        )
+                        .build()
+        );
     }
 
     public Event getEventById(Long eventId) {
@@ -91,25 +111,46 @@ public class EventService {
     }
 
     @Transactional
-    public Event updateEvent(String token, Long eventId, Event event) {
+    public Event updateEvent(String token, Long eventId, Event updateEvent) {
 
         if (!ownerOrAdmin(token, eventId)) {
             throw new InsufficientRightsException("insufficient rights");
         }
 
         Integer maxPlacesNow = eventRepository.getById(eventId).getMaxPlaces();
-        if (maxPlacesNow < event.maxPlaces()) {
+        if (maxPlacesNow < updateEvent.maxPlaces()) {
             throw new maxPlacesDuringUpdateException("Not enough places");
         }
 
+        Event noneUpdateEvent = getEventById(eventId);
+
+        kafkaEventProducerService.sendEventChanges(
+                EventChangesMessage.builder()
+                        .eventId(eventId)
+                        .changedByUserId(getUserIdFromToken(token))
+                        .ownerId(getOwnerIdByEventId(eventId))
+
+                        .date(new FieldChange<>(noneUpdateEvent.date(), updateEvent.date()))
+                        .duration(new FieldChange<>(noneUpdateEvent.duration(), updateEvent.duration()))
+                        .cost(new FieldChange<>(noneUpdateEvent.cost(), updateEvent.cost()))
+                        .maxPlaces(new FieldChange<>(noneUpdateEvent.maxPlaces(), maxPlacesNow))
+                        .locationId(new FieldChange<>(noneUpdateEvent.locationId(), updateEvent.locationId()))
+                        .name(new FieldChange<>(noneUpdateEvent.name(), updateEvent.name()))
+
+                        .registeredUserIds(
+                                getRegisteredUserIdsByEventId(eventId)
+                        )
+                        .build()
+        );
+
         eventRepository.updateEvent(
                 eventId,
-                event.date(),
-                event.duration(),
-                event.cost(),
-                event.maxPlaces(),
-                event.locationId(),
-                event.name()
+                updateEvent.date(),
+                updateEvent.duration(),
+                updateEvent.cost(),
+                updateEvent.maxPlaces(),
+                updateEvent.locationId(),
+                updateEvent.name()
         );
 
         return eventConverter.toDomain(
@@ -195,6 +236,22 @@ public class EventService {
         EventEntity eventEntity = eventRepository.getById(eventId);
 
         return eventEntity.getMaxPlaces();
+    }
+
+    public Long getOwnerIdByEventId(Long eventId) {
+        EventEntity eventEntity = eventRepository.getById(eventId);
+
+        return eventEntity.getOwnerId();
+    }
+
+    public List<Long> getRegisteredUserIdsByEventId(Long eventId) {
+        EventEntity eventEntity = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found with id: " + eventId));
+
+        return eventEntity.getRegistrations()
+                .stream()
+                .map(RegistrationEntity::getUserId)
+                .collect(Collectors.toList());
     }
 
 }
