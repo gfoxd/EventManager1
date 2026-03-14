@@ -1,10 +1,12 @@
 package dev.sashanara.eventmanager.Kafka.EventChanges;
 
 import dev.sashanara.eventmanager.Events.EventStatusManager.EventStatus;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
+@JsonSerialize
 public record EventChangesMessage(
         Long id,
 

@@ -5,6 +5,9 @@ public class FieldChange<T> {
     private T oldValue;
     private T newValue;
 
+    public FieldChange() {
+    }
+
     public FieldChange(T oldValue, T newValue) {
         this.oldValue = oldValue;
         this.newValue = newValue;
