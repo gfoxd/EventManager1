@@ -17,7 +17,13 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private SecretKey secretKey;
+
+    public JwtUtil(
+            @Value("${jwt.secret}") String secret
+    ) {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateToken(Long id, String login, Role role) {
         return Jwts.builder()
