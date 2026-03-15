@@ -133,7 +133,7 @@ public class EventService {
                         .date(new FieldChange<>(noneUpdateEvent.date(), updateEvent.date()))
                         .duration(new FieldChange<>(noneUpdateEvent.duration(), updateEvent.duration()))
                         .cost(new FieldChange<>(noneUpdateEvent.cost(), updateEvent.cost()))
-                        .maxPlaces(new FieldChange<>(noneUpdateEvent.maxPlaces(), maxPlacesNow))
+                        .maxPlaces(new FieldChange<>(noneUpdateEvent.maxPlaces(), updateEvent.maxPlaces()))
                         .locationId(new FieldChange<>(noneUpdateEvent.locationId(), updateEvent.locationId()))
                         .name(new FieldChange<>(noneUpdateEvent.name(), updateEvent.name()))
 
